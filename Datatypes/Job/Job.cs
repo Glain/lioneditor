@@ -24,17 +24,17 @@ namespace FFTPatcher.Datatypes
     /// <summary>
     /// Represents all <see cref="Job"/>s in memory.
     /// </summary>
-    public class AllJobs : IChangeable
+    public class AllJobs : IChangeable, IXmlDigest
     {
 
-		#region Static Fields (2) 
+        #region Static Fields (2)
 
         private static Job[] pspJobs;
         private static Job[] psxJobs;
 
-		#endregion Static Fields 
+        #endregion Static Fields
 
-		#region Static Properties (4) 
+        #region Static Properties (4)
 
 
         public static Job[] DummyJobs
@@ -52,9 +52,9 @@ namespace FFTPatcher.Datatypes
         public static string[] PSXNames { get; private set; }
 
 
-		#endregion Static Properties 
+        #endregion Static Properties
 
-		#region Properties (2) 
+        #region Properties (2)
 
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace FFTPatcher.Datatypes
         /// <value></value>
         public bool HasChanged
         {
-            get 
+            get
             {
                 foreach( Job j in Jobs )
                 {
@@ -77,9 +77,9 @@ namespace FFTPatcher.Datatypes
         public Job[] Jobs { get; private set; }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (3) 
+        #region Constructors (3)
 
         static AllJobs()
         {
@@ -124,9 +124,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (3) 
+        #region Methods (4)
 
 
         public List<string> GenerateCodes()
@@ -157,18 +157,42 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
+        public void WriteXml( System.Xml.XmlWriter writer )
+        {
+            writer.WriteStartElement( this.GetType().ToString() );
+            writer.WriteAttributeString( "changed", HasChanged.ToString() );
+            foreach( Job j in Jobs )
+            {
+                writer.WriteStartElement( j.GetType().ToString() );
+                writer.WriteAttributeString( "value", j.Value.ToString( "X2" ) );
+                writer.WriteAttributeString( "name", j.Name );
+                DigestGenerator.WriteXmlDigest( j, writer, false, true );
+            }
+            writer.WriteEndElement();
+        }
 
-		#endregion Methods 
+
+        #endregion Methods
 
     }
 
     /// <summary>
     /// Represents a character's Job and its abilities and attributes.
     /// </summary>
-    public class Job : IChangeable
+    public class Job : IChangeable, ISupportDigest
     {
 
-		#region Properties (33) 
+        #region Static Fields (1)
+
+        private static readonly string[] digestableAttributes = new string[] {
+            "Skillset", "HPConstant", "HPMultiplier", "MPConstant", "MPMultiplier", "SpeedConstant", "SpeedMultiplier",
+            "PAConstant", "PAMultiplier", "MAConstant", "MAMultiplier", "Move", "Jump", "CEvade", "MPortrait",
+            "MPalette", "MGraphic", "InnateA", "InnateB", "InnateC", "InnateD", "AbsorbElement", "CancelElement",
+            "HalfElement", "WeakElement", "Equipment", "PermanentStatus", "StartingStatus", "StatusImmunity" };
+
+        #endregion Static Fields
+
+        #region Properties (34)
 
 
         public Elements AbsorbElement { get; private set; }
@@ -178,6 +202,11 @@ namespace FFTPatcher.Datatypes
         public byte CEvade { get; set; }
 
         public Job Default { get; private set; }
+
+        public IList<string> DigestableProperties
+        {
+            get { return digestableAttributes; }
+        }
 
         public Equipment Equipment { get; private set; }
 
@@ -277,9 +306,9 @@ namespace FFTPatcher.Datatypes
         public Elements WeakElement { get; private set; }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (5) 
+        #region Constructors (5)
 
         public Job( IList<byte> bytes )
             : this( Context.US_PSP, bytes )
@@ -340,9 +369,9 @@ namespace FFTPatcher.Datatypes
             MGraphic = bytes[equipEnd + 35];
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (3) 
+        #region Methods (3)
 
 
         public byte[] ToByteArray()
@@ -394,7 +423,7 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Methods 
+        #endregion Methods
 
     }
 }

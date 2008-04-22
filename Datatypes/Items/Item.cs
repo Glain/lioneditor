@@ -26,17 +26,20 @@ namespace FFTPatcher.Datatypes
     /// <summary>
     /// Represents a generic item.
     /// </summary>
-    public class Item : IChangeable
+    public class Item : IChangeable, ISupportDigest
     {
 
-		#region Static Fields (2) 
+        #region Static Fields (3)
 
+        protected static readonly List<string> digestableProperties = new List<string>( new string[] {
+            "Palette", "Graphic", "EnemyLevel", "ItemType", "SIA", "Price", "ShopAvailability", "Weapon", 
+            "Shield", "Head", "Body", "Accessory", "Blank1", "Rare", "Blank2", "SecondTableId" } );
         private static List<Item> pspEventItems;
         private static List<Item> psxEventItems;
 
-		#endregion Static Fields 
+        #endregion Static Fields
 
-		#region Fields (8) 
+        #region Fields (8)
 
         private bool accessory;
         private bool blank1;
@@ -47,9 +50,9 @@ namespace FFTPatcher.Datatypes
         private bool shield;
         private bool weapon;
 
-		#endregion Fields 
+        #endregion Fields
 
-		#region Static Properties (7) 
+        #region Static Properties (7)
 
 
         public static List<Item> DummyItems
@@ -82,9 +85,9 @@ namespace FFTPatcher.Datatypes
         public static List<string> PSXNames { get; private set; }
 
 
-		#endregion Static Properties 
+        #endregion Static Properties
 
-		#region Properties (23) 
+        #region Properties (24)
 
 
         public bool Accessory { get { return accessory; } set { accessory = value; } }
@@ -133,6 +136,11 @@ namespace FFTPatcher.Datatypes
 
 
 
+        public virtual IList<string> DigestableProperties
+        {
+            get { return digestableProperties; }
+        }
+
         /// <summary>
         /// Gets a value indicating whether this instance has changed.
         /// </summary>
@@ -163,9 +171,9 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (4) 
+        #region Constructors (4)
 
         static Item()
         {
@@ -244,9 +252,9 @@ namespace FFTPatcher.Datatypes
             Default = defaults;
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (6) 
+        #region Methods (6)
 
 
         protected List<byte> ToByteArray()
@@ -301,28 +309,28 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Methods 
+        #endregion Methods
 
     }
 
     public class ShopAvailability
     {
 
-		#region Static Fields (1) 
+        #region Static Fields (1)
 
         private static List<ShopAvailability> all;
 
-		#endregion Static Fields 
+        #endregion Static Fields
 
-		#region Fields (3) 
+        #region Fields (3)
 
         private byte b;
         private string name;
         private string psxName;
 
-		#endregion Fields 
+        #endregion Fields
 
-		#region Static Properties (1) 
+        #region Static Properties (1)
 
 
         public static List<ShopAvailability> AllAvailabilities
@@ -355,17 +363,17 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Static Properties 
+        #endregion Static Properties
 
-		#region Constructors (1) 
+        #region Constructors (1)
 
         private ShopAvailability()
         {
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (2) 
+        #region Methods (2)
 
 
         public byte ToByte()
@@ -381,7 +389,7 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Methods 
+        #endregion Methods
 
     }
 

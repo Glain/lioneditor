@@ -25,16 +25,16 @@ namespace FFTPatcher.Datatypes
     /// <summary>
     /// Represents all items in memory.
     /// </summary>
-    public class AllItems : IChangeable
+    public class AllItems : IChangeable, IXmlDigest
     {
 
-		#region Fields (1) 
+        #region Fields (1)
 
         private byte[] afterPhoenixDown;
 
-		#endregion Fields 
+        #endregion Fields
 
-		#region Properties (2) 
+        #region Properties (2)
 
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace FFTPatcher.Datatypes
         public List<Item> Items { get; private set; }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (2) 
+        #region Constructors (2)
 
         public AllItems( IList<byte> first )
             : this( first, null )
@@ -181,9 +181,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (3) 
+        #region Methods (4)
 
 
         public List<string> GenerateCodes()
@@ -232,8 +232,21 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
+        public void WriteXml( System.Xml.XmlWriter writer )
+        {
+            writer.WriteStartElement( GetType().ToString() );
+            writer.WriteAttributeString( "changed", HasChanged.ToString() );
+            foreach( Item i in Items )
+            {
+                writer.WriteStartElement( i.GetType().ToString() );
+                writer.WriteAttributeString( "name", i.Name );
+                DigestGenerator.WriteXmlDigest( i, writer, false, true );
+            }
+            writer.WriteEndElement();
+        }
 
-		#endregion Methods 
+
+        #endregion Methods
 
     }
 }

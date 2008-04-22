@@ -116,6 +116,20 @@ namespace PatcherTests {
             }
         }
         
+        internal static byte[] Abilities {
+            get {
+                object obj = ResourceManager.GetObject("Abilities", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] AbilityEffects {
+            get {
+                object obj = ResourceManager.GetObject("AbilityEffects", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
         internal static byte[] ADORA {
             get {
                 object obj = ResourceManager.GetObject("ADORA", resourceCulture);
@@ -357,6 +371,41 @@ namespace PatcherTests {
         internal static byte[] DORA2 {
             get {
                 object obj = ResourceManager.GetObject("DORA2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] ENTD1 {
+            get {
+                object obj = ResourceManager.GetObject("ENTD1", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] ENTD2 {
+            get {
+                object obj = ResourceManager.GetObject("ENTD2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] ENTD3 {
+            get {
+                object obj = ResourceManager.GetObject("ENTD3", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] ENTD4 {
+            get {
+                object obj = ResourceManager.GetObject("ENTD4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] ENTD5 {
+            get {
+                object obj = ResourceManager.GetObject("ENTD5", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -739,6 +788,13 @@ namespace PatcherTests {
             }
         }
         
+        internal static byte[] NewItems {
+            get {
+                object obj = ResourceManager.GetObject("NewItems", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
         internal static byte[] NINJA_M {
             get {
                 object obj = ResourceManager.GetObject("NINJA_M", resourceCulture);
@@ -756,6 +812,13 @@ namespace PatcherTests {
         internal static byte[] ODORI_W {
             get {
                 object obj = ResourceManager.GetObject("ODORI_W", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] OldItems {
+            get {
+                object obj = ResourceManager.GetObject("OldItems", resourceCulture);
                 return ((byte[])(obj));
             }
         }

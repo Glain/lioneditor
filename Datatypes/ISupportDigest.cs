@@ -17,10 +17,12 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Collections.Generic;
+
 namespace FFTPatcher.Datatypes
 {
-    interface ISupportDigest
+    public interface ISupportDigest : IChangeable
     {
-        string GetDigest();
+        IList<string> DigestableProperties { get; }
     }
 }

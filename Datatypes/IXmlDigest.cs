@@ -17,22 +17,16 @@
     along with FFTPatcher.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Xml;
 
-namespace FFTPatcher.TextEditor.Files.PSP
+namespace FFTPatcher.Datatypes
 {
-    /// <summary>
-    /// Represents a file that exists in E/BOOT.BIN
-    /// </summary>
-    public interface IBootBin
+    interface IXmlDigest
     {
         /// <summary>
-        /// Gets the location of this file in BOOT.BIN
+        /// Converts an object into its XML representation.
         /// </summary>
-        System.Collections.Generic.ICollection<long> Locations { get; }
-        
-        /// <summary>
-        /// Converts this file into an array of bytes.
-        /// </summary>
-        byte[] ToByteArray();
+        /// <param name="writer">The stream to which the object is serialized.</param>
+        void WriteXml( XmlWriter writer );
     }
 }

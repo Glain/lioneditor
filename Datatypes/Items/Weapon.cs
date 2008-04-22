@@ -28,7 +28,13 @@ namespace FFTPatcher.Datatypes
     public class Weapon : Item
     {
 
-		#region Fields (8) 
+        #region Static Fields (1)
+
+        private static readonly List<string> weaponDigestableProperties;
+
+        #endregion Static Fields
+
+        #region Fields (8)
 
         public bool Arc;
         public bool Blank;
@@ -39,9 +45,9 @@ namespace FFTPatcher.Datatypes
         public bool TwoHands;
         public bool TwoSwords;
 
-		#endregion Fields 
+        #endregion Fields
 
-		#region Properties (9) 
+        #region Properties (10)
 
 
         public Elements Elements { get; private set; }
@@ -61,6 +67,11 @@ namespace FFTPatcher.Datatypes
         public byte WeaponPower { get; set; }
 
 
+
+        public override IList<string> DigestableProperties
+        {
+            get { return weaponDigestableProperties; }
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance has changed.
@@ -83,9 +94,18 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (2) 
+        #region Constructors (3)
+
+        static Weapon()
+        {
+            weaponDigestableProperties = new List<string>( Item.digestableProperties );
+            weaponDigestableProperties.AddRange( new string[] {
+                "Range", "Formula", "WeaponPower", "EvadePercentage", "InflictStatus",
+                "Striking", "Lunging", "Direct", "Arc", "TwoSwords", "TwoHands", "Blank",
+                "Force2Hands", "Elements"} );
+        }
 
         public Weapon( UInt16 offset, IList<byte> itemBytes, IList<byte> weaponBytes )
             : this( offset, itemBytes, weaponBytes, null )
@@ -106,9 +126,9 @@ namespace FFTPatcher.Datatypes
             InflictStatus = weaponBytes[7];
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (5) 
+        #region Methods (5)
 
 
         public byte[] ToItemByteArray()
@@ -149,7 +169,7 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Methods 
+        #endregion Methods
 
     }
 }

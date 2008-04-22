@@ -18,24 +18,30 @@
 */
 
 using System.Collections.Generic;
+using System;
 
 namespace FFTPatcher.Datatypes
 {
     /// <summary>
     /// Represents the JP needed to grow in a job level as well as the prerequisites for unlocking jobs.
     /// </summary>
-    public class JobLevels : IChangeable
+    public class JobLevels : IChangeable, IXmlDigest, ISupportDigest
     {
 
-		#region Fields (1) 
+        #region Fields (1)
 
         private string[] reqs = new string[] {
             "Chemist", "Knight", "Archer", "Monk", "WhiteMage", "BlackMage", "TimeMage", "Summoner", "Thief", "Orator", 
             "Mystic", "Geomancer", "Dragoon", "Samurai", "Ninja", "Arithmetician", "Bard", "Dancer", "Mime", "DarkKnight", "OnionKnight", "Unknown" };
 
-		#endregion Fields 
+        private static readonly string[] digestableProperties = new string[] {
+            "Chemist", "Knight", "Archer", "Monk", "WhiteMage", "BlackMage", "TimeMage", "Summoner", "Thief", "Orator", 
+            "Mystic", "Geomancer", "Dragoon", "Samurai", "Ninja", "Arithmetician", "Bard", "Dancer", "Mime", "DarkKnight", "OnionKnight", "Unknown",
+            "Level1", "Level2", "Level3", "Level4", "Level5", "Level6", "Level7", "Level8" };
 
-		#region Properties (32) 
+        #endregion Fields
+
+        #region Properties (32)
 
 
         public Requirements Archer { get; private set; }
@@ -143,9 +149,9 @@ namespace FFTPatcher.Datatypes
         public Requirements WhiteMage { get; private set; }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (3) 
+        #region Constructors (3)
 
         public JobLevels( IList<byte> bytes )
             : this( Context.US_PSP, bytes )
@@ -184,9 +190,9 @@ namespace FFTPatcher.Datatypes
             Level8 = Utilities.BytesToUShort( bytes[start + 14], bytes[start + 15] );
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (3) 
+        #region Methods (4)
 
 
         public List<string> GenerateCodes()
@@ -231,18 +237,36 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
+        public void WriteXml( System.Xml.XmlWriter writer )
+        {
+            DigestGenerator.WriteXmlDigest( this, writer, true, true );
+        }
 
-		#endregion Methods 
 
+        #endregion Methods
+
+
+        #region ISupportDigest Members
+
+        public IList<string> DigestableProperties
+        {
+            get { return digestableProperties; }
+        }
+
+        #endregion
     }
 
     /// <summary>
     /// Represents the prerequisites to unlock a job.
     /// </summary>
-    public class Requirements : IChangeable
+    public class Requirements : IChangeable, IEquatable<Requirements>
     {
+        private static readonly string[] fields = new string[24] {
+            "Squire", "Chemist", "Knight", "Archer", "Monk", "WhiteMage", "BlackMage", "TimeMage", "Summoner",
+            "Thief", "Orator", "Mystic", "Geomancer", "Dragoon", "Samurai", "Ninja", "Arithmetician", "Bard",
+            "Dancer", "Mime", "DarkKnight", "OnionKnight", "Unknown1", "Unknown2" };
 
-		#region Properties (26) 
+        #region Properties (26)
 
 
         public int Archer { get; set; }
@@ -268,14 +292,13 @@ namespace FFTPatcher.Datatypes
         /// <summary>
         /// Gets a value indicating whether this instance has changed.
         /// </summary>
-        /// <value></value>
         public bool HasChanged
         {
-            get 
+            get
             {
                 return
                     Default != null &&
-                    !Utilities.CompareArrays( ToByteArray( FFTPatch.Context ), Default.ToByteArray( FFTPatch.Context ) ); 
+                    !Utilities.CompareArrays( ToByteArray( FFTPatch.Context ), Default.ToByteArray( FFTPatch.Context ) );
             }
         }
 
@@ -310,9 +333,9 @@ namespace FFTPatcher.Datatypes
         public int WhiteMage { get; set; }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (3) 
+        #region Constructors (3)
 
         public Requirements( IList<byte> bytes )
             : this( Context.US_PSP, bytes )
@@ -356,9 +379,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (2) 
+        #region Methods (6)
 
 
         public byte[] ToByteArray( Context context )
@@ -388,8 +411,45 @@ namespace FFTPatcher.Datatypes
             return ToByteArray( Context.US_PSP );
         }
 
+        public override string ToString()
+        {
+            List<string> strings = new List<string>( 24 );
+            foreach( string field in fields )
+            {
+                int v = ReflectionHelpers.GetFieldOrProperty<int>( this, field );
+                if( v > 0 )
+                {
+                    strings.Add( string.Format( "{0}={1}", field, v ) );
+                }
+            }
 
-		#endregion Methods 
+            return string.Join( " | ", strings.ToArray() );
+        }
+
+        public override bool Equals( object obj )
+        {
+            if( obj is Requirements )
+            {
+                return Equals( obj as Requirements );
+            }
+            else
+            {
+                return base.Equals( obj );
+            }
+        }
+
+        public bool Equals( Requirements other )
+        {
+            return Utilities.CompareArrays( ToByteArray(), other.ToByteArray() );
+        }
+
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        #endregion Methods
 
     }
 }

@@ -24,10 +24,10 @@ namespace FFTPatcher.Datatypes
     /// <summary>
     /// The types of equipment a <see cref="Job"/> can use.
     /// </summary>
-    public class Equipment
+    public class Equipment : IChangeable
     {
 
-		#region Fields (40) 
+        #region Fields (40)
 
         public bool Armguard;
         public bool Armlet;
@@ -70,17 +70,22 @@ namespace FFTPatcher.Datatypes
         public bool Unknown8;
         public bool Unused;
 
-		#endregion Fields 
+        #endregion Fields
 
-		#region Properties (1) 
+        #region Properties (2)
 
 
         public Equipment Default { get; private set; }
 
+        public bool HasChanged
+        {
+            get { return Default != null && !Utilities.CompareArrays( ToBoolArray(), Default.ToBoolArray() ); }
+        }
 
-		#endregion Properties 
 
-		#region Constructors (2) 
+        #endregion Properties
+
+        #region Constructors (2)
 
         public Equipment( IList<byte> bytes )
             : this( bytes, null )
@@ -100,9 +105,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (4) 
+        #region Methods (4)
 
 
         private byte[] ToByteArrayPSX()
@@ -148,7 +153,7 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Methods 
+        #endregion Methods
 
     }
 }

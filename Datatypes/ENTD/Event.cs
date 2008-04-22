@@ -25,17 +25,17 @@ namespace FFTPatcher.Datatypes
     /// <summary>
     /// Represents an Event in the game
     /// </summary>
-    public class Event : IEquatable<Event>, IChangeable
+    public class Event : IEquatable<Event>, IChangeable, IXmlDigest
     {
 
-		#region Static Fields (2) 
+        #region Static Fields (2)
 
         private static string[] pspEventNames;
         private static string[] psxEventNames;
 
-		#endregion Static Fields 
+        #endregion Static Fields
 
-		#region Static Properties (1) 
+        #region Static Properties (1)
 
 
         public static string[] EventNames
@@ -44,9 +44,9 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Static Properties 
+        #endregion Static Properties
 
-		#region Properties (5) 
+        #region Properties (5)
 
 
         public Event Default { get; private set; }
@@ -67,9 +67,9 @@ namespace FFTPatcher.Datatypes
         public int Value { get; private set; }
 
 
-		#endregion Properties 
+        #endregion Properties
 
-		#region Constructors (2) 
+        #region Constructors (2)
 
         static Event()
         {
@@ -97,9 +97,9 @@ namespace FFTPatcher.Datatypes
             }
         }
 
-		#endregion Constructors 
+        #endregion Constructors
 
-		#region Methods (3) 
+        #region Methods (4)
 
 
         public bool Equals( Event other )
@@ -124,6 +124,20 @@ namespace FFTPatcher.Datatypes
             return result.ToArray();
         }
 
+        public void WriteXml( System.Xml.XmlWriter writer )
+        {
+            writer.WriteStartElement( GetType().ToString() );
+            writer.WriteAttributeString( "value", this.ToString() );
+            writer.WriteAttributeString( "changed", HasChanged.ToString() );
+            for( int i = 0; i < 16; i++ )
+            {
+                writer.WriteStartElement( typeof( EventUnit ).ToString() );
+                writer.WriteAttributeString( "value", i.ToString() );
+                DigestGenerator.WriteXmlDigest( Units[i], writer, false, true );
+            }
+            writer.WriteEndElement();
+        }
+
 
 
         public override string ToString()
@@ -132,7 +146,7 @@ namespace FFTPatcher.Datatypes
         }
 
 
-		#endregion Methods 
+        #endregion Methods
 
     }
 }
