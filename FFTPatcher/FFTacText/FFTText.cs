@@ -393,6 +393,7 @@ namespace FFTPatcher.TextEditor
                     int numberOfTasks = defaultNumberOfTasks + patches.Count * 2;
                     worker.ReportProgress( ++tasksCompleted * 100 / numberOfTasks );
                 };
+
             if ( Filetype != Filetype.PSX )
             {
                 throw new InvalidOperationException();
